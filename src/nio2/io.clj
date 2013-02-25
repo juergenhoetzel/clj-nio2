@@ -56,6 +56,11 @@ and subsequent args as children relative to the parent."
   (make-writer [#^Path p opts]
     (Files/newBufferedWriter p (encoding opts) (open-options opts))))
 
+(extend-protocol io/Coercions
+  Path
+  (as-url [p] (.toURI p)) 
+  (as-file [p] (.toFile p)))
+
 ;;; workaround :io/do-copy is private
 (defmethod @#'io/do-copy [InputStream Path] [#^InputStream input #^Path output opts]
   (Files/copy input output (copy-options opts)))
