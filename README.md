@@ -1,4 +1,4 @@
-A NIO.2 library for clojure
+A NIO.2 library for Clojure
 ===========================
 
 This package provides a lispy interface to NIO.2 introduced with Java 7.
