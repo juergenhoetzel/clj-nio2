@@ -47,13 +47,13 @@ and subsequent args as children relative to the parent."
 
 (extend-protocol io/IOFactory
   Path
-  (make-reader [#^Path p opts]
+  (make-reader [^Path p opts]
     (Files/newBufferedReader p (encoding opts)))
-  (make-input-stream [#^Path p opts]
+  (make-input-stream [^Path p opts]
     (Files/newInputStream p (open-options opts)))
-  (make-output-stream [#^Path p opts]
+  (make-output-stream [^Path p opts]
     (Files/newOutputStream p (open-options opts)))
-  (make-writer [#^Path p opts]
+  (make-writer [^Path p opts]
     (Files/newBufferedWriter p (encoding opts) (open-options opts))))
 
 (extend-protocol io/Coercions
@@ -62,12 +62,12 @@ and subsequent args as children relative to the parent."
   (as-file [p] (.toFile p)))
 
 ;;; workaround :io/do-copy is private
-(defmethod @#'io/do-copy [InputStream Path] [#^InputStream input #^Path output opts]
+(defmethod @#'io/do-copy [InputStream Path] [^InputStream input ^Path output opts]
   (Files/copy input output (copy-options opts)))
 
-(defmethod @#'io/do-copy [InputStream Path] [#^Path input #^OutputStream output opts]
+(defmethod @#'io/do-copy [InputStream Path] [^Path input ^OutputStream output opts]
   (Files/copy input output (copy-options opts)))
 
-(defmethod @#'io/do-copy [Path Path] [#^Path input #^Path output opts]
+(defmethod @#'io/do-copy [Path Path] [^Path input ^Path output opts]
   (Files/copy input output (copy-options opts)))
 
