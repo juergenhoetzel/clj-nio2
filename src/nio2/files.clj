@@ -18,12 +18,14 @@
   (Files/getOwner p (link-options link-opts)))
 
 (defn last-modified-time [^Path p & link-opts]
-  (Files/getLastModifiedTime path (link-options link-opts)))
+  (Files/getLastModifiedTime p (link-options link-opts)))
 
 (defn parent [^Path p]
   (.getParent p))
 
-(defn real-path [^Path p])
+(defn real-path [^Path p & link-opts]
+  (.toRealPath p (link-options link-opts)))
+
 ;;; fixme file-attributes ignored
 (defn create-directories! [^Path p & file-attributes]
   (Files/createDirectories p (into-array FileAttribute [])))
