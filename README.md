@@ -30,15 +30,18 @@ user> (io2/fs-path (io2/filesystem "jar:file:/home/juergen/zipfstest.zip" :creat
 Use Path objects in clojure.java.io:
 ------------------------------------
 
-`nio2.io` implements `Coercions` and `IOFactory` protocols:
+`nio2.io` implements `Coercions` and `IOFactory` protocols.
 
 ```clj
-user> (require '[clojure.java.io :as io])
+user> (time (io/copy (io2/path "f:"  "isos" "archlinux-2013.02.01-dual.iso") (io2/path "f:" "isos" "temp.iso")))
+"Elapsed time: 897.233123 msecs"
+#<WindowsPath f:\isos\temp.iso>
+user> (time (io/copy (io/file "f:\\isos\\archlinux-2013.02.01-dual.iso") (io/file "f:\\isos\\temp.iso")))
+"Elapsed time: 5324.70911 msecs"
 nil
-user> (with-open [jarfs (io2/filesystem "jar:file:/home/juergen/zipfstest.zip" :create true)]
-         (io/copy (io2/path "project.clj") (io2/fs-path jarfs "project.clj")))
-#<ZipPath project.clj>
 ```
+
+Performance using NIO2 is much faster than the old API (File has to be copied in Userspace).
 
 
 [Path]: http://docs.oracle.com/javase/7/docs/api/java/nio/file/Path.html
