@@ -1,4 +1,4 @@
-(defproject info.hoetzel/clj-nio2 "0.1.0-SNAPSHOT"
+(defproject info.hoetzel/clj-nio2 "0.1.0-pre2"
   :description "Clojure NIO2 API"
   :scm {:url "git@github.com:juergenhoetzel/clj-nio2.git"}
   :url "https://github.com/juergenhoetzel/clj-nio2"
