@@ -4,13 +4,13 @@
 
 ;;; need to wrap, because the directory stream has to be closed
 (defn- lazy-dir-stream-seq [^DirectoryStream dir-stream]
-  (let [it (.iterator dir-stream)]
-    (letfn [(next []
-              (if (.hasNext it)
-                (cons (.next it) (lazy-seq (next)))
-                (do (.close dir-stream)
-                    nil)))]
-      (lazy-seq (next)))))
+  (let [it (.iterator dir-stream)
+        iter (fn thisfn []
+               (if (.hasNext it)
+                 (cons (.next it)
+                       (lazy-seq (thisfn)))
+                 (.close dir-stream)))]
+    (lazy-seq (iter))))
 
 (defn path-matcher
   "Return a predicate function that matches a path using syntax-and-pattern. Use the default filesystem
