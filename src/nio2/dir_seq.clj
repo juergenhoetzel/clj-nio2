@@ -24,18 +24,21 @@ For example: \"glob:*.clj\" or \"regex:[0-9]*.txt\""
   ([^String syntax-and-pattern]
      (path-matcher syntax-and-pattern (FileSystems/getDefault))))
 
-(defn dir-seq [^Path path]
-  "A seq on Path entries in path"
-  (-> (Files/newDirectoryStream path)
+(defn dir-seq [^Path p]
+  "Return a lazy sequence of the Path entries in Path p"
+  (-> (Files/newDirectoryStream p)
       (lazy-dir-stream-seq)))
 
-(defn dir-seq-glob [^Path path ^String glob]
-  "A Seq on Path entries matching glob, e.g. \"*.clj\""
-  (-> (Files/newDirectoryStream path glob)
+(defn dir-seq-glob [^Path p ^String glob]
+  "Return a lazy sequence of the Path entries in Path p  for which
+   the globing parameter matches, e.g. \"*.clj\""
+  (-> (Files/newDirectoryStream p glob)
       (lazy-dir-stream-seq)))
 
-(defn dir-seq-filter [^Path path pred]
-  (-> (Files/newDirectoryStream path (reify DirectoryStream$Filter
+(defn dir-seq-filter [^Path p pred]
+  "Returns a lazy sequence of the Path entries in Path p  for which 
+  (pred p) returns true."
+  (-> (Files/newDirectoryStream p (reify DirectoryStream$Filter
                                     (accept [_  p]
                                       (pred p))))
       (lazy-dir-stream-seq)))
