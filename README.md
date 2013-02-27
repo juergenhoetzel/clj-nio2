@@ -5,6 +5,15 @@ This package provides a lispy interface to NIO.2 (requires Java 7)
 
 The most important NIO.2 types used in this packages are [Path][] and [FileSystem][]
 
+
+Installation
+============
+
+Add the following to your `:dependencies`:
+
+    [info.hoetzel/clj-nio2 "0.1.0"]
+
+
 Quick Walk-Through
 ==================
 
