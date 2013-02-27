@@ -48,9 +48,25 @@ Performance using NIO2 is much faster than the old API (File has to be copied in
 [FileSystem]: http://docs.oracle.com/javase/7/docs/api/java/nio/file/FileSystem.html
 
 
+Use dir-seq:
+------------
 
+Seq of Paths matching a glob:
 
+```clj
+user> (use 'nio2.dir-seq)
+nil
+user> (dir-seq-glob (path "") "*.clj")
+(#<UnixPath project.clj>)
+```
 
+Seq of Paths matching a predicate:
 
+```clj
+user> (use 'nio2.files) ; for path related predicate functions
+nil
+user> (dir-seq-filter (path "") (partial is-owner? "juergen"))
+(#<UnixPath pom.xml.asc> #<UnixPath src> #<UnixPath .git> #<UnixPath README.md> #<UnixPath target> #<UnixPath project.clj> #<UnixPath pom.xml>)
+```
 
 
