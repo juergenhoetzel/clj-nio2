@@ -38,6 +38,10 @@
 (defn owner [^Path p & link-opts]
   (Files/getOwner p (link-options link-opts)))
 
+(defn is-owner? [#^String owner-name ^Path p & link-options]
+  (= (.getName (apply owner p link-options))
+     owner-name))
+
 (defn last-modified-time [^Path p & link-opts]
   (Files/getLastModifiedTime p (link-options link-opts)))
 
