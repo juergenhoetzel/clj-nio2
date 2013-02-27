@@ -43,7 +43,7 @@ For example: \"glob:*.clj\" or \"regex:[0-9]*.txt\""
                                       (pred p))))
       (lazy-dir-stream-seq)))
 
-(defn file-seq [path]
+(defn dir-seq-recursive [path]
   "Like clojure.core.file-seq, but fully lazy (directory contents). Returns a Seq of Path"
   (tree-seq
    directory?
