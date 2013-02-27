@@ -1,4 +1,5 @@
 (ns nio2.files
+  "Mapping of [java.nio.file Files Path"
   (:import  [java.nio.file Files Path LinkOption]
             [java.nio.file.attribute FileAttribute])
   (:use nio2.io nio2.options))
@@ -45,6 +46,13 @@
 
 (defn real-path [^Path p & link-opts]
   (.toRealPath p (link-options link-opts)))
+
+(defn resolve-path [^Path p1 ^Path p2]
+  (.resolve p1 p2))
+
+(defn relativize [^Path p1 ^Path p2]
+  "Return a relative path between  p1 and p2"
+  (.relativize p1 p2))
 
 ;;; fixme file-attributes ignored
 (defn create-directories! [^Path p & file-attributes]
