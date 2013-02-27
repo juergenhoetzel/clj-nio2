@@ -1,7 +1,7 @@
 A NIO.2 library for Clojure
 ===========================
 
-This package provides a lispy interface to NIO.2 introduced with Java 7.
+This package provides a lispy interface to NIO.2 (requires Java 7)
 
 The most important NIO.2 types used in this packages are [Path][] and [FileSystem][]
 
