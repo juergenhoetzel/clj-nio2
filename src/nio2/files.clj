@@ -11,6 +11,26 @@
   "return true if p is a regular file (no symbilic link)"
   (Files/isRegularFile p (into-array LinkOption [])))
 
+(defn filesystem [^Path p]
+  "Returns the file system of Path p"
+  (.getFileSystem p))
+
+(defn file-name
+  "Returns a filename Path element of Path p.
+   With additional arg i return Path element at index i. 
+   With additional arg j return Seq of Path elements from i to j.
+
+   Indices may be negative numbers, to start counting from the end.
+   For example: (file-name (p 0 -1))"
+  ([^Path p]
+     (.getFileName p))
+  ([^Path p i]
+     (.getName p (if (neg? i) (+ (.getNameCount p) i) i)))
+  ([^Path p i j]
+     (let [j (if (neg? j) (+ (.getNameCount p) j) j)
+           i (if (neg? i) (+ (.getNameCount p) i) i)]
+       (for [k (range i j)] (.getName p k)))))
+
 (defn hidden? [^Path p]
   (Files/isHidden p))
 
