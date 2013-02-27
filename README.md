@@ -23,7 +23,7 @@ user> (io2/path "project.clj")
 On a different filesystem:
 
 ```clj
-user> (io2/fs-path (io2/filesystem "jar:file:/home/juergen/zipfstest.zip" :create true) "project.clj")
+user> (io2/fs-path (io2/fs "jar:file:/home/juergen/zipfstest.zip" :create true) "project.clj")
 #<ZipPath project.clj>
 ```
 

@@ -6,10 +6,10 @@
   (:require [clojure.java.io :as io])
   (:use nio2.options))
 
-(defn filesystem [uri & options]
+(defn fs [uri & options]
   "Create a Filesystem using uri and env created by optional keyword arguments.
 
-For example: (filesystem \"jar:file:/home/juergen/zipfstest.zip\" :create  true)"
+For example: (fs \"jar:file:/home/juergen/zipfstest.zip\" :create  true)"
   ;; provide idiomatic clojure keyword arguments: filesystems always require string options
   (let [as-env-option (fn [o] (cond
                                (keyword? o) (name o)
