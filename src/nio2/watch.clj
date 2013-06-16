@@ -8,7 +8,29 @@
                                :delete StandardWatchEventKinds/ENTRY_DELETE
                                :modify StandardWatchEventKinds/ENTRY_MODIFY})
 
-(defn watch-seq [^Path path event-kind & event-kinds]
+(defn get-watch-service
+  "Returns a watchable object given a Path"
+  [path]
+  (-> (.getFileSystem path)
+      (.newWatchService)))
+
+(defn- register
+  [path ws events]
+  (.register path ws (into-array WatchEvent$Kind events)))
+
+(defn- create-event-map
+  [^WatchEvent e]
+  {:kind (get (map-invert event-mapping)  (.kind e))
+   :path (.context e)})
+
+(defn- read-events
+  "Takes a watch service as input, and returns a seq of events as output. This is a blocking fn, it will only return when events become avalaible."
+  [ws]
+  (let [key (.take ws)]
+    (.reset key)
+    (map create-event-map (.pollEvents key))))
+
+(defn watch-seq [^Path path & events]
   "Creates and returns a lazy sequence of {:event event-type :path path} corresponding to
   events generated on path.
 
@@ -16,18 +38,12 @@
     :create
     :delete
     :modify"
-  (let [ws (-> (.getFileSystem path)
-               (.newWatchService))
-        event-kinds (map event-mapping (cons event-kind event-kinds))
-        iter (fn thisfn []
-               (let [key (.take ws)
-                     events (.pollEvents key)]
-                 (let [events  (map (fn [^WatchEvent e]
-                                      {:kind (get (map-invert event-mapping)  (.kind e))
-                                       :path (.context e)}) events)]
-                   (.reset key)
-                   (lazy-seq (concat  events (lazy-seq (thisfn)))))))]
-    (when (some nil? event-kinds)
-      (throw (IllegalArgumentException. (str "Not a valid (:create, :delete, :modify) event-kind: " event-kind))))
-    (.register path ws (into-array WatchEvent$Kind event-kinds))
-    (iter)))
+  (let [ws (get-watch-service path)
+        events-to-watch (map event-mapping events)]
+    (when (some nil? events-to-watch)
+      (throw (IllegalArgumentException. (str "Not a valid (:create, :delete, :modify) event-kind: " events))))
+    (register path ws events-to-watch)
+    (flatten (repeatedly #(read-events ws)))))
+
+
+;;(concat (flatten (read-events ws)) (lazy-seq (read-events ws)))
