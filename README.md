@@ -108,7 +108,7 @@ The watch-seq fn takes a path object, and event types as input. It returns a laz
 The event types that can be given to it can be any or all of - :create, :modify and :delete.
 
 ```clj
-(:use [nio2.watch :only [watch-seq]
+(:use [nio2.watch :only [watch-seq]]
       [nio2.io :only [path]])
 
 (doseq [ev (watch-seq (path "/" "home" "alex" "tmp") :create :modify :delete)]
