@@ -11,7 +11,7 @@ Installation
 
 Add the following to your `:dependencies`:
 
-    [info.hoetzel/clj-nio2 "0.1.0"]
+    [info.hoetzel/clj-nio2 "0.1.1"]
 
 
 Quick Walk-Through
