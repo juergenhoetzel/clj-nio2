@@ -1,6 +1,7 @@
 (ns nio2.watch
-  "Wrap Watch events in a Clojure Seq"
-  (:use [clojure.set :only [map-invert]])
+  "Wrap watch events in a core.async channels"
+  (:require [clojure.set :refer [map-invert]]
+            [clojure.core.async :refer [thread >!! chan <!! <! go] :as async])
   (:import [java.nio.file Files FileSystem FileSystems Path StandardWatchEventKinds WatchEvent WatchEvent$Kind WatchEvent$Modifier]))
 
 
@@ -41,17 +42,25 @@
   [s]
   (lazy-seq (concat (first s) (concats (rest s)))))
 
-(defn watch-seq [^Path path & events]
-  "Creates and returns a lazy sequence of {:event event-type :path path} corresponding to
+(defn watch-chan [^Path path & events]
+  "Returns a channel of {:event event-type :path path} corresponding to
   events generated on path.
 
   event-kind are keywords and may be of:
     :create
     :delete
     :modify"
-  (let [ws (get-watch-service path)
+  (let [c (chan)
+        ws (get-watch-service path)
         events-to-watch (map event-mapping events)]
     (when (some nil? events-to-watch)
       (throw (IllegalArgumentException. (str "Not a valid (:create, :delete, :modify) event-kind: " events))))
     (register path ws events-to-watch)
-    (concats (repeatedly #(read-events ws)))))
+    (async/thread (loop []
+                    (if (reduce (fn [_ e]
+                                  (>!! c e))
+                                true
+                                (read-events ws))
+                      (recur)
+                      (.close  ws))))
+    c))
